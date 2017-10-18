@@ -18,8 +18,10 @@ export class AfterLogin extends Component {
   };
 
   unsubscribe: Function;
+  hasRun: boolean;
 
   componentDidMount () {
+    this.hasRun = false;
     this.unsubscribe = this.props.route.store.subscribe(this.checkIfLoggedIn);
 
     // check if we are logged in right from the start
@@ -28,7 +30,8 @@ export class AfterLogin extends Component {
 
   checkIfLoggedIn = () => {
     const {users} = this.props.route.store.getState();
-    if (users.state === "loaded") {
+    if (!this.hasRun && users.state === "loaded") {
+      this.hasRun = true;
       this.props.loadCoupons();
 
       // stop listening, we are done
